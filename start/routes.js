@@ -15,6 +15,18 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
+const User = use('App/Models/User')
 
 /** Home */
 Route.get('/', 'HomeController.index').middleware('guest')
+
+
+/* user routes*/
+
+//GET route
+Route.get('/users', async () => {
+        return await User.all();
+})
+
+//Post
+Route.post('/users/register','UserController.index');
