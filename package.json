@@ -1,8 +1,8 @@
 {
-  "name": "template-adonisjs",
+  "name": "near",
   "version": "0.0.0",
   "adonis-version": "4.1.0",
-  "description": "AdonisJs template for twala projects.",
+  "description": "Keep all important information in your mind only.",
   "main": "index.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint . --ext .js",
@@ -15,7 +15,7 @@
     "adonisjs",
     "adonis-app"
   ],
-  "author": "Alexander Paul P. Quinit",
+  "author": "Paulo Argenal",
   "license": "MIT",
   "private": true,
   "dependencies": {
