@@ -22,11 +22,21 @@ Route.get('/', 'HomeController.index').middleware('guest')
 
 
 /* user routes*/
-
 //GET route
 Route.get('/users', async () => {
         return await User.all();
 })
-
 //Post
 Route.post('/users/register','UserController.index');
+
+
+
+//Authentication route
+/*GET*/
+Route
+  .post('/login', 'AuthController.login')
+  .middleware('guest')
+
+Route
+  .get('/users/:id', 'AuthController.show')
+  .middleware('auth')
