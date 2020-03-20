@@ -23,5 +23,22 @@ class UserController {
                     .send(error)    
         }
     }
+    async showUser({request, response}){
+        try {
+            const user      = await User.findBy('id', request.params.userid);
+                if(!user){
+                    return response
+                            .status(400)
+                            .send({message: {error: 'User does not exist'} })
+                }
+                return user;            
+        } catch (error) {
+            return response
+                   .status(error.status)
+                   .send(error)
+        }        
+    }
+
+
 }
 module.exports = UserController

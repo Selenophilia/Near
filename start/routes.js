@@ -22,10 +22,16 @@ Route.get('/', 'HomeController.index').middleware('guest')
 
 
 /* user routes*/
-//GET route
+
+//GET 
 Route.get('/users','UserController.getUser')
-//Post
+//POST
 Route.post('/users','UserController.createUser');
+//SHOW
+Route.get('/users/:userid', 'UserController.showUser')
+//PUT
+Route.put('/users/:userid', 'UserController.updateUser')
+
 
 
 
