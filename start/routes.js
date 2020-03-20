@@ -31,7 +31,7 @@ Route.post('/users','UserController.createUser');
 Route.get('/users/:userid', 'UserController.showUser')
 //PUT
 Route.put('/users/:userid', 'UserController.updateUser')
-
+Route.delete('/users/:userid', 'UserController.deleteUser')
 
 
 

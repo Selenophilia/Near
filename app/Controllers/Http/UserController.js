@@ -39,6 +39,23 @@ class UserController {
         }        
     }
 
+    async updateUser({request, response}){
+        const user    = await User.findBy('id', request.params.userid)
+     
+    }  
+
+  async deleteUser({request, response}){
+      try {
+        const user = await User.findBy('id', request.params.userid)
+             await user.delete()  
+         return response.send({message: 'User deleted'})              
+      } catch (error) {
+          return response
+                .status(400)
+                .send(error)
+      }
+    }
+
 
 }
 module.exports = UserController
