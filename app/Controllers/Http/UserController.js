@@ -2,8 +2,11 @@
 
 const User = use('App/Models/User');
 
-class UserController {
-    async index({request, response}){
+class UserController {   
+    async  getUser(){
+        return await User.all();
+    }
+    async createUser({request, response}){
         try {
             const data      = request.only(['username', 'email', 'password']);
             const userExist = await User.findBy('email', data.email);

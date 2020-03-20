@@ -23,11 +23,9 @@ Route.get('/', 'HomeController.index').middleware('guest')
 
 /* user routes*/
 //GET route
-Route.get('/users', async () => {
-        return await User.all();
-})
+Route.get('/users','UserController.getUser')
 //Post
-Route.post('/users/register','UserController.index');
+Route.post('/users','UserController.createUser');
 
 
 
