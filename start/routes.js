@@ -25,23 +25,18 @@ Route.get('/', 'HomeController.index').middleware('guest')
 
 //GET 
 Route.get('/users','UserController.getUser')
+    
 //POST
 Route.post('/users','UserController.createUser');
 //SHOW
-Route.get('/users/:userid', 'UserController.showUser')
+Route.get('/users/:userid', 'UserController.showProfile')   
+      .middleware('auth')
 //PUT
 Route.put('/users/:userid', 'UserController.updateUser')
+
 //DELETE
 Route.delete('/users/:userid', 'UserController.deleteUser')
 
+//POST login
+Route.post('/users/login', 'UserController.logIn')      
 
-
-//Authentication route
-/*GET*/
-Route
-  .post('/login', 'AuthController.login')
-  .middleware('guest')
-
-Route
-  .get('/users/:id', 'AuthController.show')
-  .middleware('auth')

@@ -15,8 +15,8 @@ class UserController {
                                     .status(400)
                                     .send({message: {error: 'User already exists'} })
                         }
-                    const user = await User.create(data)
-                    return user
+                const user = await User.create(data)
+                return user
             } catch (error) {
                     return response
                               .status(error.status)
@@ -46,9 +46,7 @@ class UserController {
                             user.email    = request.body.email
                         
                             await user.save()  
-                
-                return  response.send({message: 'User updated'}) 
-                
+                            return  response.send(user)                 
             } catch (error) {
                 return response
                         .status(400)
@@ -66,5 +64,33 @@ class UserController {
                         .send(error)
             }
     }
+
+    //added auth on UserController 
+   async logIn({request,auth,response}){
+            try {
+                const {email, password} = request.all()
+                const data              = request.only(['username', 'email', 'password']);
+                const user              = await User.findBy('email', data.email);
+                const token             = await auth.generate(user)
+               
+               
+                await auth
+                    .withRefreshToken()    
+                    .attempt(email, password)
+                            
+                return response.send(token) 
+            } catch (error) {
+                  response.send('Missing or invalid jwt token')
+            }
+         
+    } 
+
+   async showProfile({auth,request}){    
+        if(auth.user.id  !== Number(request.params.userid)){
+             return 'You cannot see this profile'
+        }
+
+         return auth.user
+   }
 }
 module.exports = UserController
