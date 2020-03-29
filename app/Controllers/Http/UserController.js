@@ -6,91 +6,94 @@ class UserController {
     async  getUser(){
             return await User.all();
     }
+    
     async createUser({request, response}){
-            try {
-                const data      = request.only(['username', 'email', 'password']);
-                const userExist = await User.findBy('email', data.email);
-                        if(userExist){
-                            return response
-                                    .status(400)
-                                    .send({message: {error: 'User already exists'} })
-                        }
-                const user = await User.create(data)
-                return user
-            } catch (error) {
-                    return response
-                              .status(error.status)
-                              .send(error)    
-            }
+                    const data      = request.only(['username', 'email', 'password']);
+                    const userExist = await User.findBy('email', data.email);
+                            if(userExist){
+                                return response.send({message: {error: 'User already exists'} })
+                            }
+
+                    const newUser = await User.create(data)
+                    return newUser
+
+            // try {
+            //     const data      = request.only(['username', 'email', 'password']);
+            //     const userExist = await User.findBy('email', data.email);
+            //             if(userExist){
+            //                 return response
+            //                         .status(400)
+            //                         .send({message: {error: 'User already exists'} })
+            //             }
+            //     const user = await User.create(data)
+            //     return user
+            // } catch (error) {
+            //         return response
+            //                   .status(error.status)
+            //                   .send(error)    
+            // }
     }
-    async showUser({request, response}){
-            try {
-                const user      = await User.findBy('id', request.params.userid);
-                    if(!user){
-                        return response
-                                .status(400)
-                                .send({message: {error: 'User does not exist'} })
-                    }
-                return user            
-            } catch (error) {
-                return response
-                    .status(error.status)
-                    .send(error)
-            }        
+    async showUser({ params }){
+            const userid = params.userid
+            const user      = await User.findByOrFail('id', userid);
+            const showUser = user.toJSON() 
+
+            return showUser            
+     
+            // try {
+            //     const user      = await User.findBy('id', request.params.userid);
+            //         if(!user){
+            //             return response
+            //                     .status(400)
+            //                     .send({message: {error: 'User does not exist'} })
+            //         }
+            //     return user            
+            // } catch (error) {
+            //     return response
+            //         .status(error.status)
+            //         .send(error)
+            // }        
     }
 
-    async updateUser({request, response}){
-            try {
-                const user = await User.findBy('id',request.params.userid)            
-                            user.username = request.body.username
-                            user.email    = request.body.email
-                        
-                            await user.save()  
-                            return  response.send(user)                 
-            } catch (error) {
-                return response
-                        .status(400)
-                        .send(error)
-            }
+    async updateUser({ request }){
+            const userid = request.params.userid
+            const user   = await User.findBy('id',userid)                                   
+                            user.merge({
+                                        username:   request.body.username,
+                                        email:      request.body.email,
+                                        password:   request.body.password
+                                    })   
+                            await user.save()             
+                                
+            // try {
+            //     const user = await User.findBy('id',request.params.userid)            
+                       
+            //                 user.merge({
+            //                             username: request.body.username,
+            //                             email: request.body.email
+            //                         })   
+            //                 await user.save()  
+            //                 return  response.send(user)                 
+            // } catch (error) {
+            //     return response
+            //             .status(400)
+            //             .send(error)
+            // }
     }  
-  async deleteUser({request, response}){
-            try {
-                const user = await User.findBy('id', request.params.userid)
-                             await user.delete()  
-                return response.send({message: 'User deleted'})              
-            } catch (error) {
-                return response
-                        .status(400)
-                        .send(error)
-            }
+  async deleteUser({ params }){
+            const userid = params.userid;
+            const user = await User.findByOrFail('id', userid)           
+            user.delete(user)
+
+            // try {
+            //     //  const user = await User.findBy('id', request.params.userid)
+            //                  await user.delete(userid)  
+            //  //   return response.send({message: 'User deleted'})              
+            // } catch (error) {
+            //    throw error("Error Found")
+            // }
     }
 
-    //added auth on UserController 
-   async logIn({request,auth,response}){
-            try {
-                const {email, password} = request.all()
-                const data              = request.only(['username', 'email', 'password']);
-                const user              = await User.findBy('email', data.email);
-                const token             = await auth.generate(user)
-               
-               
-                await auth
-                    .withRefreshToken()    
-                    .attempt(email, password)
-                            
-                return response.send(token) 
-            } catch (error) {
-                  response.send('Missing or invalid jwt token')
-            }
-         
-    } 
 
-   async showProfile({auth,request}){    
-        if(auth.user.id  !== Number(request.params.userid)){
-             return 'You cannot see this profile'
-        }
-
-         return auth.user
-   }
 }
 module.exports = UserController
