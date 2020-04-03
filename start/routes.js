@@ -35,6 +35,8 @@ Route.put('/users/:userid', 'UserController.updateUser')
 //DELETE
 Route.delete('/users/:userid', 'UserController.deleteUser')
 
-//POST login
+
+/* login routes*/
+//POST
 Route.post('/users/login', 'UserController.logIn')      
 
