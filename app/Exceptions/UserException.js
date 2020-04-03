@@ -6,7 +6,7 @@ class UserException extends LogicalException {
     handle (error, { response }) {
         response
           .status(500)
-          .send('Custom exception handled!')
+          .send(error)
       }
 
       constructor(){
