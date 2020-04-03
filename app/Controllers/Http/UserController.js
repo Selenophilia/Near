@@ -1,21 +1,27 @@
 'use strict'
 
-const User = use('App/Models/User');
+const User              = use('App/Models/User');
+const UserException   = use('App/Exceptions/UserException')
 
 class UserController {   
     async  getUser(){
             return await User.all();
     }
     
-    async createUser({request, response}){
-                    const data      = request.only(['username', 'email', 'password']);
-                    const userExist = await User.findBy('email', data.email);
-                            if(userExist){
-                                return response.send({message: {error: 'User already exists'} })
-                            }
+    async createUser({ request }){
+        try {
+                const data      = request.only(['username', 'email', 'password']);
+                const userExist = await User.findBy('email', data.email);
+                        if(userExist){
+                            throw new UserException()
+                        }
 
-                    const newUser = await User.create(data)
-                    return newUser
+                const newUser = await User.create(data)
+                return newUser
+            
+        } catch (error) {
+                throw new UserException(error)
+        }     
 
             // try {
             //     const data      = request.only(['username', 'email', 'password']);
@@ -57,7 +63,7 @@ class UserController {
 
     async updateUser({ request }){
             const userid = request.params.userid
-            const user   = await User.findBy('id',userid)                                   
+            const user   = await User.findByOrFail('id',userid)                                   
                             user.merge({
                                         username:   request.body.username,
                                         email:      request.body.email,
