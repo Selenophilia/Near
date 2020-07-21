@@ -1,5 +1,7 @@
 'use strict'
 
+const { route } = require('@adonisjs/framework/src/Route/Manager')
+
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -21,19 +23,19 @@ const User = use('App/Models/User')
 Route.get('/', 'HomeController.index').middleware('guest')
 
 
-/* user routes*/
-//GET 
-Route.get('/users','UserController.getUser')
-    
-//POST
-Route.post('/users','UserController.createUser');
-//SHOW
-Route.get('/users/:userid', 'UserController.showUser')   
-      .middleware('auth')
-//PUT
-Route.put('/users/:userid', 'UserController.updateUser')
-//DELETE
-Route.delete('/users/:userid', 'UserController.deleteUser')
+
+
+
+// Route.resource('users', 'UserController')
+/* CRUD routes*/
+Route.group(() => {
+      Route.get('/', 'UserController.index')
+      Route.get('/:userid', 'UserController.showUser')
+      //.middleware('auth')
+      Route.post('/', 'UserController.createUser')
+      Route.put('/:userid', 'UserController.updateUser')
+      Route.delete('/:userid', 'UserController.deleteUser')
+}).prefix('/users')
 
 
 /* login routes*/
